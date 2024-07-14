@@ -10,18 +10,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RespuestaImc {
 	/**
-	 * Calcular IMC según x parametros de entrada en solictud GET
-	 * @return: Estado del peso de la persona
+	 * Calcular IMC según x parametros de entrada en solictud GET.
+	 * 1.INVOCA METODO PRIVADO PARA CALCULAR EL IMC SEGÚN LOS PARAMETROS DE ENTRADA EN EL GET HTTP
+	 * 2.INVOCA METODO PARA CALCULAR EL ESTADO DE LA PERSONA, SI ES OBESA....
+	 * @return: Estado del peso de la persona con String.format -> PARA ESPECIFICAR EL FORMATO; Número de 2 decimales + String
 	 */
 	@GetMapping("/calculo")
-	private static double calcularIMC(@RequestParam double peso, @RequestParam double estaturaMetros) {
+	public  String calcularIMC(@RequestParam double peso, @RequestParam double estaturaMetros) {
+		double imc = calcularIMCValue(peso, estaturaMetros); 
+		String estadoCorporal = clasificarIMC(imc);
 		
-		
-		return 0;
+		return String.format("Tu IMC es de: %.2f. Tu estado actual es: %s.",imc,estadoCorporal);
 	}
 	
 		//METODOS PRIVADOS, ENCAPSULADOS:
-		
+		/**
+		 * 
+		 * @param peso
+		 * @param estaturaMetros
+		 * @return valor del IMC de la persona
+		 */
 		private double calcularIMCValue(double peso, double estaturaMetros) {
 			if (estaturaMetros <= 0) {
 				throw new IllegalArgumentException("La altura no puede ser igual o menos que 0 !");
@@ -31,7 +39,9 @@ public class RespuestaImc {
 		}
 		
 		/**
-		 * CLASIFICAR EL IMC
+		 * 
+		 * @param imc
+		 * @return Estado de la persona, si está en pesos insuficiente, normal. . . 
 		 */
 		private String clasificarIMC(double imc) {
 	        if (imc < 18.5) {
@@ -43,7 +53,6 @@ public class RespuestaImc {
 	        } else {
 	            return "Obesidad";
 	        }
-	    
 	}
 
 }
